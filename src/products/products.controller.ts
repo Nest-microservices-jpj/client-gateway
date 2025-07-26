@@ -19,54 +19,53 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    @Inject(NATS_SERVICE) private readonly client: ClientProxy,
-  ) {}
+  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   @Post()
   createProduct(@Body() createProductDto: CreateProductDto) {
-    return this.client.send('create_product', createProductDto);
+    return this.client.send('create_product', createProductDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Get()
   findAllProducts(@Query() paginationDto: PaginationDto) {
-    return this.client.send('find_all_products', paginationDto);
+    return this.client.send('find_all_products', paginationDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.client.send( 'find_one_product' , {id})
-      .pipe(
-        catchError((error) => {
-          throw new RpcException(error)
-        })
-      );
-    // try {
-    //   const product = await firstValueFrom(this.productsClient.send({ cmd: 'find_one' }, {id}));
-    //   return product;
-    // } catch (error) {
-    //   throw new RpcException(error)
-    // }
-  
+    return this.client.send('find_one_product', { id }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Patch(':id')
-  patchProduct(@Param('id', ParseIntPipe) id: number, @Body() updateProductDto: UpdateProductDto) {
-    return this.client.send('update_product', {id, ...updateProductDto})
-      .pipe(
-        catchError((error) => {
-          throw new RpcException(error)
-        })
-      );
+  patchProduct(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.client.send('update_product', { id, ...updateProductDto }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Delete(':id')
   deleteProduct(@Param('id') id: string) {
-    return this.client.send('delete_product', {id})
-      .pipe(
-        catchError((error) => {
-          throw new RpcException(error)
-        })
-      );
+    return this.client.send('delete_product', { id }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 }
