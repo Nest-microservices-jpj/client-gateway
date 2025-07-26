@@ -4,6 +4,7 @@ import { OrdersModule } from './orders/orders.module';
 import { NatsModule } from './transports/nats.module';
 
 
+
 @Module({
   imports: [ProductsModule, OrdersModule, NatsModule],
 })

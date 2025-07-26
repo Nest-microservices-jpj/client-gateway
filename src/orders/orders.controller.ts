@@ -25,17 +25,17 @@ export class OrdersController {
 
   @Post()
   createProduct(@Body() createOrderDto: CreateOrderDto) {
-    return this.client.send({ cmd: 'create_order' }, createOrderDto);
+    return this.client.send('create_order', createOrderDto);
   }
 
   @Get()
   findAllOrders(@Query() orderPaginationDto: OrderPaginationDto) {
-    return this.client.send({ cmd: 'find_all' }, orderPaginationDto);
+    return this.client.send('find_all_orders', orderPaginationDto);
   }
 
   @Get('id/:id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.client.send({ cmd: 'find_one' }, { id }).pipe(
+    return this.client.send('find_one_order' , { id }).pipe(
       catchError((error) => {
         throw new RpcException(error);
       }),
@@ -48,13 +48,7 @@ export class OrdersController {
     @Query() paginationDto: PaginationDto,
   ) {
     return this.client
-      .send(
-        { cmd: 'find_all' },
-        {
-          ...paginationDto,
-          status: statusDto.status,
-        },
-      )
+      .send('find_all_orders',{...paginationDto,status: statusDto.status,},)
       .pipe(
         catchError((error) => {
           throw new RpcException(error);
@@ -67,7 +61,7 @@ export class OrdersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() statusDto: StatusDto,
   ) {
-    return this.client.send({ cmd: 'change_order_status' }, { id, status: statusDto.status }).pipe(
+    return this.client.send('change_order_status', { id, status: statusDto.status }).pipe(
       catchError((error) => {
         throw new RpcException(error);
       }),
