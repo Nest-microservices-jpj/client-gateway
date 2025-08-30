@@ -8,6 +8,7 @@ import {
   Query,
   ParseUUIDPipe,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 
 import { ClientProxy, RpcException } from '@nestjs/microservices';
@@ -15,8 +16,9 @@ import { NATS_SERVICE } from 'src/config';
 import { CreateOrderDto, OrderPaginationDto, StatusDto } from './dto';
 import { catchError } from 'rxjs';
 import { PaginationDto } from 'src/common';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-
+@UseGuards(AuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(
