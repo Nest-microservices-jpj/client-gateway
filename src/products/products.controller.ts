@@ -8,8 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
-  UseGuards,
+  Query
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
